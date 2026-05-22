@@ -1,0 +1,28 @@
+# Secrets — never commit
+**/secrets.env
+**/*.env
+!skyways-frontend/.env
+
+# Maven build output
+**/target/
+**/*.jar
+**/*.war
+
+# Frontend dependencies
+skyways-frontend/node_modules/
+
+# Runtime logs
+**/logs/*.log
+**/logs/*.log.gz
+
+# IDE
+**/.idea/
+**/*.iml
+**/.vscode/
+**/.classpath
+**/.project
+**/.settings/
+
+# OS
+.DS_Store
+Thumbs.db
