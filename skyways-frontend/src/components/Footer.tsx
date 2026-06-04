@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Footer() {
@@ -37,20 +36,18 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Powered By</h4>
-            <ul className="space-y-1.5 text-xs text-gray-400">
-              <li className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-green-400 inline-block"></span>Razorpay Payments</li>
-              <li className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-blue-400 inline-block"></span>Spring Boot Microservices</li>
-              <li className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-purple-400 inline-block"></span>Apache Kafka</li>
-              <li className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-yellow-400 inline-block"></span>SendGrid Email</li>
-              <li className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-red-400 inline-block"></span>PostgreSQL</li>
+            <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Contact</h4>
+            <ul className="space-y-2 text-sm text-gray-400">
+              <li>support@skyways.com</li>
+              <li>+1-800-SKY-WAYS</li>
+              <li>24/7 Customer Care</li>
             </ul>
           </div>
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-6 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-gray-500">
           <span>&copy; {new Date().getFullYear()} SkyWays Airlines. All rights reserved.</span>
-          <span>Spring Boot &bull; Microservices &bull; Kubernetes &bull; Kafka</span>
+          <span>Safe Travel &bull; Global Routes &bull; Instant Booking</span>
         </div>
       </div>
     </footer>

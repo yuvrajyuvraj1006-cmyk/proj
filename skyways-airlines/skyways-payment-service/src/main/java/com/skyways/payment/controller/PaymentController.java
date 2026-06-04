@@ -16,7 +16,10 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.client.RestTemplate;
+
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/v1/payments")
@@ -81,6 +84,18 @@ public class PaymentController {
             req.getRazorpayPaymentId(),
             req.getRazorpaySignature()
         );
+
+        String bookingId = payment.getBookingId().toString();
+        CompletableFuture.runAsync(() -> {
+            try {
+                new RestTemplate().postForEntity(
+                    "http://localhost:8083/api/v1/bookings/internal/confirm/" + bookingId,
+                    null, String.class);
+                log.info("Booking confirmed directly via HTTP [bookingId={}]", bookingId);
+            } catch (Exception e) {
+                log.warn("Direct booking confirmation failed [bookingId={}]: {}", bookingId, e.getMessage());
+            }
+        });
 
         return ResponseEntity.ok(ApiResponse.ok(payment));
     }

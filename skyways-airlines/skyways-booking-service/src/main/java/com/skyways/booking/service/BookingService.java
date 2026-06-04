@@ -62,6 +62,13 @@ public class BookingService {
                 .currency(req.getCurrency())
                 .status(BookingStatus.INITIATED)
                 .sagaId(sagaId)
+                .contactEmail(req.getContactEmail())
+                .flightNumber(req.getFlightNumber())
+                .airlineName(req.getAirlineName())
+                .originIata(req.getOriginIata())
+                .destinationIata(req.getDestinationIata())
+                .departureTime(req.getDepartureTime())
+                .arrivalTime(req.getArrivalTime())
                 .build();
 
             List<Passenger> passengers = req.getPassengers().stream()
@@ -103,6 +110,27 @@ public class BookingService {
     }
 
     @Transactional
+    public void cancelBooking(String bookingRef, UUID userId) {
+        Booking booking = bookingRepository.findByBookingRef(bookingRef)
+            .orElseThrow(() -> new BookingNotFoundException(bookingRef));
+
+        if (booking.getUserId() == null || !booking.getUserId().equals(userId)) {
+            throw new BookingNotFoundException(bookingRef);
+        }
+
+        if (booking.getStatus() == BookingStatus.CANCELLED) {
+            throw new BookingAlreadyCancelledException(bookingRef);
+        }
+
+        BookingStatus oldStatus = booking.getStatus();
+        booking.setStatus(BookingStatus.CANCELLED);
+        bookingRepository.save(booking);
+        recordStatusChange(booking.getBookingId(), oldStatus, BookingStatus.CANCELLED, "Cancelled by user");
+
+        log.info("Booking cancelled by user [bookingRef={}, userId={}]", bookingRef, userId);
+    }
+
+    @Transactional
     public void updateBookingStatus(UUID bookingId, BookingStatus newStatus, String reason) {
         Booking booking = bookingRepository.findById(bookingId)
             .orElseThrow(() -> new BookingNotFoundException(bookingId.toString()));
@@ -119,6 +147,11 @@ public class BookingService {
 
         log.info("Booking status updated [bookingId={}, {}->{}]",
             bookingId, oldStatus, newStatus);
+    }
+
+    @Transactional(readOnly = true)
+    public Booking getById(UUID bookingId) {
+        return bookingRepository.findById(bookingId).orElse(null);
     }
 
     @Transactional(readOnly = true)

@@ -46,11 +46,13 @@ public class SendGridService {
 
     private void send(String toEmail, String toName, String subject,
                        String htmlBody, String bookingRef) {
-        String apiKey = secretManagerService.getSecret("SENDGRID_API_KEY");
-        SendGrid sg   = new SendGrid(apiKey);
+        String apiKey      = secretManagerService.getSecret("SENDGRID_API_KEY");
+        String resolvedFrom = secretManagerService.getSecret("SENDGRID_FROM_EMAIL");
+        if (resolvedFrom == null || resolvedFrom.isBlank()) resolvedFrom = fromEmail;
+        SendGrid sg = new SendGrid(apiKey);
 
         try {
-            Email from    = new Email(fromEmail, FROM_NAME);
+            Email from    = new Email(resolvedFrom, FROM_NAME);
             Email to      = new Email(toEmail, toName);
             Content content = new Content("text/html", htmlBody);
             Mail mail     = new Mail(from, subject, to, content);

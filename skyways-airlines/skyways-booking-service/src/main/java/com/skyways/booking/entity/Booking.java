@@ -48,6 +48,27 @@ public class Booking {
     @Column(name = "saga_id")
     private UUID sagaId;
 
+    @Column(name = "contact_email")
+    private String contactEmail;
+
+    @Column(name = "flight_number", length = 20)
+    private String flightNumber;
+
+    @Column(name = "airline_name", length = 100)
+    private String airlineName;
+
+    @Column(name = "origin_iata", length = 5)
+    private String originIata;
+
+    @Column(name = "destination_iata", length = 5)
+    private String destinationIata;
+
+    @Column(name = "departure_time", length = 50)
+    private String departureTime;
+
+    @Column(name = "arrival_time", length = 50)
+    private String arrivalTime;
+
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<BookingItem> items = new ArrayList<>();

@@ -69,7 +69,6 @@ echo ============================================
 echo   All services started!
 echo   Wait 2-3 more minutes before booking.
 echo   Eureka:   http://localhost:8761
-echo   Gateway:  http://localhost:8080
 echo   Frontend: http://localhost:3000
 echo ============================================
 pause

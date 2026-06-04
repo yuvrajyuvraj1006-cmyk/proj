@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { format, parseISO } from 'date-fns';
 import type { FlightDto } from '../types';
@@ -60,7 +59,7 @@ export default function FlightCard({ flight, passengers, tripType = 'ONE_WAY' }:
               <div className="h-px bg-gray-300 flex-1"></div>
             </div>
             <p className="text-xs text-gray-400">
-              {flight.stops === 0 ? 'Non-stop' : `${flight.stops} stop${flight.stops > 1 ? 's' : ''}`}
+              {(!flight.stops || flight.stops === 0) ? 'Non-stop' : `${flight.stops} stop${flight.stops > 1 ? 's' : ''}`}
             </p>
           </div>
 

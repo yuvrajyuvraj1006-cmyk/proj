@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { format, parseISO } from 'date-fns';
 import { bookingApi } from '../api/bookingApi';
@@ -34,6 +34,7 @@ export default function BookingHistoryPage() {
     setCancelling(bookingRef);
     try {
       await bookingApi.cancel(bookingRef);
+      alert('Booking cancelled successfully. Your refund will be processed within 10-15 business days.');
       load(currentPage);
     } catch (e: any) {
       alert(e?.response?.data?.message ?? 'Cancellation failed.');

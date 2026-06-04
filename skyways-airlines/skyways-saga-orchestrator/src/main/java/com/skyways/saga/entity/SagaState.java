@@ -40,6 +40,12 @@ public class SagaState {
     @Column(name = "compensation_step", length = 50)
     private String compensationStep;
 
+    @Column(name = "contact_email")
+    private String contactEmail;
+
+    @Column(name = "booking_ref", length = 20)
+    private String bookingRef;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;

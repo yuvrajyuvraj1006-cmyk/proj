@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Orchestrates the booking saga across:
@@ -34,9 +33,6 @@ public class SagaOrchestrationService {
     private final SagaStateRepository sagaStateRepository;
     private final KafkaTemplate<String, KafkaEventEnvelope<?>> kafkaTemplate;
 
-    private final ConcurrentHashMap<String, String> notificationEmails    = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<String, String> notificationBookingRefs = new ConcurrentHashMap<>();
-
     public SagaOrchestrationService(SagaStateRepository sagaStateRepository,
                                      KafkaTemplate<String, KafkaEventEnvelope<?>> kafkaTemplate) {
         this.sagaStateRepository = sagaStateRepository;
@@ -54,19 +50,18 @@ public class SagaOrchestrationService {
             return;
         }
 
+        String contactEmail  = (String) payload.getOrDefault("contactEmail", "");
+        String bookingRefStr = (String) payload.getOrDefault("bookingRef", "");
+
         SagaState state = SagaState.builder()
             .sagaId(sagaUUID)
             .bookingId(bookingId)
             .status(SagaStatus.SEAT_RESERVATION_PENDING)
             .currentStep("SEAT_RESERVATION")
+            .contactEmail(contactEmail)
+            .bookingRef(bookingRefStr)
             .build();
         sagaStateRepository.save(state);
-
-        String contactEmail  = (String) payload.getOrDefault("contactEmail", "");
-        String bookingRefStr = (String) payload.getOrDefault("bookingRef", "");
-        String bookingIdStr  = bookingId.toString();
-        if (!contactEmail.isEmpty())  notificationEmails.put(bookingIdStr, contactEmail);
-        if (!bookingRefStr.isEmpty()) notificationBookingRefs.put(bookingIdStr, bookingRefStr);
 
         log.info("Saga started [sagaId={}, bookingId={}]", sagaId, bookingId);
 
@@ -115,7 +110,13 @@ public class SagaOrchestrationService {
     @Transactional
     public void handlePaymentProcessed(Map<String, Object> payload, String sagaId) {
         String bookingId = (String) payload.get("bookingId");
-        updateSagaState(sagaId, SagaStatus.COMPLETED, null);
+
+        try {
+            updateSagaState(sagaId, SagaStatus.COMPLETED, null);
+        } catch (Exception e) {
+            log.warn("Could not update saga state [sagaId={}]: {} — continuing with confirmation",
+                sagaId, e.getMessage());
+        }
 
         log.info("Payment processed — completing saga [sagaId={}, bookingId={}]",
             sagaId, bookingId);
@@ -165,10 +166,26 @@ public class SagaOrchestrationService {
 
     private void publishNotification(String sagaId, String bookingId,
                                       Map<String, Object> context, String eventType, String reason) {
-        String email      = notificationEmails.getOrDefault(bookingId, "");
-        String bookingRef = notificationBookingRefs.getOrDefault(bookingId, bookingId);
-        notificationEmails.remove(bookingId);
-        notificationBookingRefs.remove(bookingId);
+        String email      = "";
+        String bookingRef = bookingId;
+        try {
+            SagaState state = null;
+            try {
+                state = sagaStateRepository.findById(UUID.fromString(sagaId)).orElse(null);
+            } catch (Exception ignored) {}
+            if (state == null) {
+                state = sagaStateRepository.findByBookingId(UUID.fromString(bookingId)).orElse(null);
+            }
+            if (state != null) {
+                if (state.getContactEmail() != null && !state.getContactEmail().isBlank())
+                    email = state.getContactEmail();
+                if (state.getBookingRef() != null && !state.getBookingRef().isBlank())
+                    bookingRef = state.getBookingRef();
+            }
+        } catch (Exception e) {
+            log.warn("Could not read contact info from saga state [sagaId={}, bookingId={}]: {}",
+                sagaId, bookingId, e.getMessage());
+        }
 
         Map<String, Object> notifPayload = new java.util.HashMap<>(Map.of(
             "bookingRef",     bookingRef,

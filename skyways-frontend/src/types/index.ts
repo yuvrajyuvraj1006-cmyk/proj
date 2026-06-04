@@ -89,6 +89,12 @@ export interface CreateBookingRequest {
   passengers: PassengerInput[];
   contactEmail: string;
   contactPhone: string;
+  flightNumber?: string;
+  airlineName?: string;
+  originIata?: string;
+  destinationIata?: string;
+  departureTime?: string;
+  arrivalTime?: string;
 }
 
 export interface BookingSummary {

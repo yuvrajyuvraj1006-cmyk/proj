@@ -31,11 +31,11 @@ public class PaymentEventProducer {
                 .sagaId(sagaId)
                 .traceId(ThreadContext.get("traceId"))
                 .payload(Map.of(
-                    "paymentId",     payment.getPaymentId().toString(),
-                    "bookingId",     payment.getBookingId().toString(),
+                    "paymentId",        payment.getPaymentId().toString(),
+                    "bookingId",        payment.getBookingId().toString(),
                     "gatewayPaymentId", payment.getGatewayPaymentId(),
-                    "amount",        payment.getAmount().toString(),
-                    "currency",      payment.getCurrency()
+                    "amount",           payment.getAmount().toString(),
+                    "currency",         payment.getCurrency()
                 ))
                 .build();
 

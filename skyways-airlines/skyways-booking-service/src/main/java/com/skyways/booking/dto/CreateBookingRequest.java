@@ -26,6 +26,13 @@ public class CreateBookingRequest {
 
     private String contactPhone;
 
+    private String flightNumber;
+    private String airlineName;
+    private String originIata;
+    private String destinationIata;
+    private String departureTime;
+    private String arrivalTime;
+
     @NotEmpty
     @Valid
     private List<PassengerDto> passengers;

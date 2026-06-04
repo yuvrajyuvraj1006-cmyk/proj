@@ -44,6 +44,22 @@ public class SagaEventConsumer {
     }
 
     @KafkaListener(
+        topics = KafkaTopics.PAYMENT_PROCESSED,
+        groupId = "booking-service-payment-confirmed"
+    )
+    public void handlePaymentProcessed(KafkaEventEnvelope<Map<String, Object>> event) {
+        String bookingId = (String) event.getPayload().get("bookingId");
+        log.info("Payment processed — confirming booking directly [bookingId={}]", bookingId);
+
+        try {
+            bookingService.updateBookingStatus(
+                UUID.fromString(bookingId), BookingStatus.CONFIRMED, "Payment processed");
+        } catch (Exception e) {
+            log.error("Failed to confirm booking from payment event [bookingId={}]: {}", bookingId, e.getMessage());
+        }
+    }
+
+    @KafkaListener(
         topics = KafkaTopics.BOOKING_CANCELLED,
         groupId = "booking-service-group"
     )

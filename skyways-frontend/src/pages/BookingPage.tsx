@@ -52,6 +52,12 @@ export default function BookingPage() {
         passengers,
         contactEmail,
         contactPhone,
+        flightNumber:    flight?.flightNumber,
+        airlineName:     flight?.airlineName,
+        originIata:      flight?.originIata,
+        destinationIata: flight?.destinationIata,
+        departureTime:   flight?.departureTime,
+        arrivalTime:     flight?.arrivalTime,
       });
       navigate(`/seats/${result.bookingId}`, { state: { bookingRef: result.bookingRef, flight, totalAmount, currency: flight?.currency ?? 'INR', passengerCount } });
     } catch (err: any) {
