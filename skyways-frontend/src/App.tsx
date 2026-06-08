@@ -13,6 +13,7 @@ import PaymentPage from './pages/PaymentPage';
 import BookingConfirmationPage from './pages/BookingConfirmationPage';
 import BookingHistoryPage from './pages/BookingHistoryPage';
 import ProfilePage from './pages/ProfilePage';
+import SupportPage from './pages/SupportPage';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -54,6 +55,7 @@ function AppRoutes() {
           <Route path="/profile" element={
             <ProtectedRoute><ProfilePage /></ProtectedRoute>
           } />
+          <Route path="/support" element={<SupportPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { flightApi } from '../api/flightApi';
 import FlightCard from '../components/FlightCard';
@@ -26,7 +26,7 @@ export default function SearchResultsPage() {
   const [filterStops, setFilterStops] = useState<number | null>(null);
 
   const load = useCallback(async () => {
-    if (!req.origin || !req.destination || !req.departureDate) return;
+    if (!req.origin || !req.destination || !req.departureDate) { setLoading(false); return; }
     setLoading(true);
     setError('');
     try {

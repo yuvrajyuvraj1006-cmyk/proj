@@ -29,8 +29,8 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-1">
             {[
               { to: '/', label: 'Home', end: true },
-              { to: '/search', label: 'Search Flights', end: false },
               ...(isAuthenticated ? [{ to: '/my-bookings', label: 'My Bookings', end: false }] : []),
+              { to: '/support', label: 'Support', end: false },
             ].map(({ to, label, end }) => (
               <NavLink key={to} to={to} end={end} className={({ isActive }) =>
                 `px-4 py-2 rounded-lg text-sm font-medium transition-all ${
@@ -86,10 +86,10 @@ export default function Navbar() {
       {menuOpen && (
         <div className="md:hidden bg-white border-t border-gray-100 px-4 py-4 space-y-1 shadow-lg">
           <Link to="/" onClick={() => setMenuOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600">Home</Link>
-          <Link to="/search" onClick={() => setMenuOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600">Search Flights</Link>
           {isAuthenticated && (
             <Link to="/my-bookings" onClick={() => setMenuOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600">My Bookings</Link>
           )}
+          <Link to="/support" onClick={() => setMenuOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600">Support</Link>
           <div className="pt-3 border-t border-gray-100 flex gap-2">
             {isAuthenticated ? (
               <button onClick={handleLogout} className="px-4 py-2 rounded-lg text-xs font-semibold border border-gray-200 text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all">Sign Out</button>

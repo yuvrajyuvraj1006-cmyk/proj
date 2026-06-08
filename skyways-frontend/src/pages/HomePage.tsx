@@ -252,7 +252,6 @@ const BG_SCENES = [
 export default function HomePage() {
   const navigate = useNavigate();
   const [bgIdx, setBgIdx] = useState(0);
-
   useEffect(() => {
     const id = setInterval(() => setBgIdx(i => (i + 1) % BG_SCENES.length), 5000);
     return () => clearInterval(id);
@@ -382,7 +381,7 @@ export default function HomePage() {
       </section>
 
       {/* Search card */}
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 -mt-16 relative z-10">
+      <section id="search-flights" className="max-w-4xl mx-auto px-4 sm:px-6 -mt-16 relative z-10">
         <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6">
           <h2 className="text-lg font-bold text-gray-800 mb-4">Search Flights</h2>
 
@@ -536,16 +535,8 @@ export default function HomePage() {
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {POPULAR_ROUTES.map((route, idx) => {
-            const colors = [
-              { bg: 'from-blue-600 to-sky-400',   badge: 'bg-blue-100 text-blue-700' },
-              { bg: 'from-violet-600 to-purple-400', badge: 'bg-violet-100 text-violet-700' },
-              { bg: 'from-emerald-600 to-teal-400',  badge: 'bg-emerald-100 text-emerald-700' },
-              { bg: 'from-orange-500 to-amber-400',  badge: 'bg-orange-100 text-orange-700' },
-              { bg: 'from-pink-600 to-rose-400',     badge: 'bg-pink-100 text-pink-700' },
-              { bg: 'from-cyan-600 to-blue-400',     badge: 'bg-cyan-100 text-cyan-700' },
-            ];
-            const c = colors[idx % colors.length];
+          {POPULAR_ROUTES.map((route) => {
+            const c = { bg: 'from-blue-600 to-sky-400', badge: 'bg-blue-100 text-blue-700' };
             return (
               <button
                 key={`${route.from}-${route.to}`}
@@ -588,7 +579,7 @@ export default function HomePage() {
       </section>
 
       {/* Why SkyWays */}
-      <section className="mt-20 py-20" style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0c2340 100%)' }}>
+      <section className="mt-20 py-20" style={{ background: '#1e1b4b' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-extrabold text-white mb-2">Why SkyWays?</h2>
